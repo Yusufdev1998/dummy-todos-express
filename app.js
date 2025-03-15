@@ -107,11 +107,25 @@ app.delete("/todos/:id", (req, res) => {
     res.status(404).send({ msg: "Todo not found" });
   }
 });
+
+app.get("/products/search", (req, res) => {
+  const query = req.query;
+  const q = query.q;
+  const products = todos.filter(
+    pro => pro.title.includes(q) || pro.description.includes(q)
+  );
+  res.send({
+    products: products,
+    total: products.length,
+    skip: 0,
+    limit: 30,
+  });
+});
 async function startServer() {
-  const res = await fetch("https://dummyjson.com/todos?limit=0");
+  const res = await fetch("https://dummyjson.com/products?limit=0");
   const data = await res.json();
 
-  todos = data.todos;
+  todos = data.products;
 
   const PORT = 3000;
 
